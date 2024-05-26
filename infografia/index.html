@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía TDD</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <style>
+        /* Estilos CSS para la página */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #titulo {
+            font-size: 36px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+            margin-top: auto;
+        }
+        #grafo {
+            background-position: left top; 
+            background-size: auto 80%;
+            background-repeat: no-repeat; 
+            width: 87%;
+            height: 65vh;
+            background-color: #fff;
+            border: 1px solid #ccc;
+        }
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 30%;
+            text-align: center;
+            position: relative;
+            margin: 10px 0;
+            flex: 1;
+            min-width: 250px; /* Ensure cards do not get too narrow */
+        }
+        .card h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .card ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .card ul li {
+            margin: 5px 0;
+        }
+        .card img {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        @media (max-width: 1000px) {
+            #titulo {
+                font-size: 28px;
+                margin-top: auto;
+            }
+            .card {
+                width: 45%;
+                margin: 10px 5px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #titulo {
+                font-size: 28px;
+                margin-top: auto;
+            }
+            .card {
+                width: 45%;
+                margin: 10px 5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #titulo {
+                font-size: 24px;
+                margin-top: 12cm;
+            }
+            .card {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="titulo">Infografia de TDD</div>
+        <div id="grafo"></div>
+        <div class="cards">
+            <div class="card">
+                <img src="img/lindo.gif" alt="Ventajas">
+                <h2>Ventajas</h2>
+                <ul>
+                    <li>Escaso uso del depurador o debugger.</li>
+                    <li>Excelente relación calidad-tiempo.</li>
+                    <li>Avance en pequeños pasos continuados.</li>
+                    <li>Seguridad de código bien escrito.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <img src="img/limitado.gif" alt="Limitaciones">
+                <h2>Limitaciones</h2>
+                <ul>
+                    <li>Dificultad al implementar interfaces gráficas.</li>
+                    <li>Puede necesitar más tiempo del planeado.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <img src="img/herramientas-para-reparar.gif">
+                <h2>Herramientas</h2>
+                <ul>
+                    <li>RSpec pruebas de lógica de negocio</li>
+                    <li>Capistrano para la automatización</li>
+                    <li>Jenkins para la integración continua</li>
+                    <li>Capybara para test de comportamiento</li>
+                    <li>xUnit para pruebas unitarias</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <script>
+        // Datos de regiones y colores
+        const marios = [
+            { id: 1, label: 'Elegir un requisito', image: 'img/selectivo.gif', },
+            { id: 2, label: 'Escribir una prueba', image: 'img/notas.gif' },
+            { id: 3, label: 'Verificar que la prueba falla', image: 'img/entrega.gif' },
+            { id: 4, label: 'Escribir la implementación', image: 'img/maquina-de-escribir.gif' },
+            { id: 5, label: 'Ejecutar las pruebas automatizadas', image: 'img/prueba.gif' },
+            { id: 6, label: 'Eliminación de la duplicación', image: 'img/eliminar.gif' },
+            { id: 7, label: 'Actualizar la lista de requisitos', image: 'img/diagrama.gif' },
+        ];
+
+        const habilidades = [
+            { from: 1, to: 2, arrows: "to", length: 200 },
+            { from: 2, to: 3, arrows: "to", length: 200 },
+            { from: 3, to: 4, arrows: "to", length: 200 },
+            { from: 4, to: 5, arrows: "to", length: 200 },
+            { from: 5, to: 6, arrows: "to", length: 200 },
+            { from: 6, to: 7, arrows: "to", length: 200 },
+            { from: 7, to: 1, arrows: "to", length: 200 },
+        ];
+
+        // Crear un DataSet de nodos y un DataSet de arcos
+        const nodes = new vis.DataSet(marios);
+        const edges = new vis.DataSet(habilidades);
+
+        // Crear un objeto de opciones para la visualización del grafo
+        const options = {
+            nodes: {
+                shape: "image",
+                size: 60,
+                font: {
+                    size: 20,
+                    color: '#000',
+                    face: 'Arial',
+                    vadjust: 50, // Ajustar el texto para que no se superponga con las imágenes
+                },
+            },
+            edges: {
+                color: "#ccc",
+                width: 3, // Hacer las flechas más gruesas
+                font: {
+                    size: 16,
+                    align: 'middle',
+                },
+                arrows: {
+                    to: { enabled: true, scaleFactor: 1.5 },
+                },
+            },
+            layout: {
+                improvedLayout: true,
+                hierarchical: false,
+            },
+            physics: {
+                enabled: true,
+                barnesHut: {
+                    gravitationalConstant: -8000,
+                    centralGravity: 0.3,
+                    springLength: 95,
+                    springConstant: 0.04,
+                    damping: 0.09
+                },
+                stabilization: {
+                    iterations: 1000
+                }
+            }
+        };
+
+        // Crear una red (grafo) utilizando vis.js
+        const container = document.getElementById("grafo");
+        const data = { nodes, edges };
+        const network = new vis.Network(container, data, options);
+    </script>
+</body>
+</html>
